@@ -1,4 +1,4 @@
-public class subscriber {
+public abstract class subscriber {
     protected String name;  //nombre del suscriptor
     protected String topic; //topico al que esta suscrito
 
@@ -9,9 +9,5 @@ public class subscriber {
     }
 
     //metodo que sera sobreescrito en las subclases para recibir el mensaje
-    public void receiveMessage(String message){
-        //este metodo se implementara en las subclases
-        System.out.println(name + "recibe mensaje en" + topic + ":" + message);
-
-    }
+    public abstract void receiveMessage(String message);
 }

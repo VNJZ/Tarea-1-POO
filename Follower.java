@@ -1,23 +1,21 @@
-package Etapa1;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedWriter;
 
-public class Follower extends Subscriber {
-    // Constructor que inicializa el nombre y tópico del seguidor
-    public Follower(String name, String topic) {
-        super(name, topic); // Llamamos al constructor de la clase base (Subscriber)
+public class follower extends subscriber{
+    //constructor que inicializa el nombre y topico del seguidor
+    public follower(String name, String topic){
+        super(name, topic); //llamamos al constructor de la clase base (el suscriber)
     }
 
-    // Sobrescribimos el método para recibir el mensaje y mostrarlo de una forma específica
+    //sobrescribimos el metodo para recibir el mensaje y mostrarlo de una forma especifica
     @Override
-    public void receiveMessage(String message) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name.toLowerCase() + ".txt", true))) {
-            // Escribe el mensaje en el archivo
+    public void receiveMessage(String message){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name.toLowerCase() + ".txt", true))){
+            //se escribe en msg en el archivo
+            writer.newLine(); //salto de linea
             writer.write(message);
-            writer.newLine(); // Salto de línea
-        } catch (IOException e) {
+        } catch (IOException e){
             e.printStackTrace();
         }
     }

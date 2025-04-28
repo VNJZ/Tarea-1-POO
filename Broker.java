@@ -1,21 +1,17 @@
-package Etapa1;
-
 import java.util.ArrayList;
 
-public class Broker {
-    private ArrayList<Subscriber> subscribers = new ArrayList<>();  // Lista de suscriptores
+public class broker {
+    private ArrayList<subscriber> subscribers = new ArrayList<>();  // lista de suscriptores
 
-    // Método para agregar un suscriptor a la lista
-    public void addSubscriber(Subscriber subscriber) {
+    // metodo para agregar un suscriptor a la lista
+    public void addSubscriber(subscriber subscriber) {
         subscribers.add(subscriber);
     }
 
-    // Método para enviar un mensaje a todos los suscriptores
+    // metodo para enviar un mensaje a todos los suscriptores
     public void sendMessage(String message) {
-        for (Subscriber sub : subscribers) {
-            sub.receiveMessage(message);  // Llamamos al método de recibir mensaje de cada suscriptor
+        for (subscriber sub : subscribers) {
+            sub.receiveMessage(message);  // llamamos al método de recibir mensaje de cada suscriptor
         }
     }
 }
-
-

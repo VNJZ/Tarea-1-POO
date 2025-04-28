@@ -2,7 +2,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedWriter;
 
-
 public class follower extends subscriber{
     //constructor que inicializa el nombre y topico del seguidor
     public follower(String name, String topic){
@@ -14,8 +13,8 @@ public class follower extends subscriber{
     public void receiveMessage(String message){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(name.toLowerCase() + ".txt", true))){
             //se escribe en msg en el archivo
-            writer.write(message);
             writer.newLine(); //salto de linea
+            writer.write(message);
         } catch (IOException e){
             e.printStackTrace();
         }
