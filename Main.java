@@ -1,33 +1,27 @@
-package Etapa1;
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Crear una instancia de un publicador (streamer)
         Publisher streamer = new Publisher("Streamer_1", "Notificaciones_1");
-        
-        // Crear una instancia de los suscriptores (seguidores)
-        Follower follower1 = new Follower("Seguidor_1", "Notificaciones_1");
-        Follower follower2 = new Follower("Seguidor_2", "Notificaciones_1");
 
-        // Crear un Broker para gestionar los suscriptores
+        Follower follower = new Follower("Seguidor_1", "Notificaciones_1");
+
         Broker broker = new Broker();
-        broker.addSubscriber(follower1);  // Agregar seguidor 1
-        broker.addSubscriber(follower2);  // Agregar seguidor 2
+        broker.addSubscriber(follower);
 
-        // Crear un Scanner para leer mensajes del teclado
         Scanner scanner = new Scanner(System.in);
 
-        // El streamer (publicador) publica un mensaje
         System.out.println("Escribe un mensaje para que el streamer lo publique:");
-        String message = scanner.nextLine();  // Leemos el mensaje ingresado por el usuario
-        streamer.publish(message);  // El streamer publica el mensaje
+        String message = scanner.nextLine().trim(); // Elimina espacios vacíos al inicio/final
 
-        // El broker distribuye el mensaje a todos los seguidores
-        broker.sendMessage(message);  // El broker envía el mensaje a los seguidores
+        if (!message.isEmpty()) {
+            String finalMessage = streamer.getName() + " " + message;
+            streamer.publish(message); 
+            broker.sendMessage(finalMessage);
+        } else {
+            System.out.println("No se ingresó un mensaje válido.");
+        }
 
-        // Cerrar el scanner
-        scanner.close();
+        scanner.close(); // Ahora sí cerramos el scanner porque termina el programa
     }
 }

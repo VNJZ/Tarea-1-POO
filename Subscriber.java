@@ -1,4 +1,4 @@
-package Etapa1;
+
 
 public class Subscriber {
     protected String name;  // Nombre del suscriptor

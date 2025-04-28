@@ -1,4 +1,3 @@
-package Etapa1;
 
 public class Publisher {
     private String name; // Nombre del streamer
