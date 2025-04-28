@@ -1,31 +1,63 @@
+import java.io.File;
+import java.io.PrintStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class main {
-    public static void main(String[] args) {
-        // crear una instancia de un publicador (streamer)
-        publisher streamer = new publisher("Streamer_1", "Notificaciones_1");
-        
-        // crear una instancia de los suscriptores (seguidores)
-        follower follower1 = new follower("Seguidor_1", "Notificaciones_1");
-        follower follower2 = new follower("Seguidor_2", "Notificaciones_1");
-
-        // crear un Broker para gestionar los suscriptores
-        broker broker = new broker();
-        broker.addSubscriber(follower1);  // agregar seguidor 1
-        broker.addSubscriber(follower2);  // agregar seguidor 2
-
-        // crear un Scanner para leer mensajes del teclado
-        Scanner scanner = new Scanner(System.in);
-
-        // el streamer (publicador) publica un mensaje
-        System.out.println("Escribe un mensaje para que el streamer lo publique:");
-        String message = scanner.nextLine();  // leemos el mensaje ingresado por el usuario
-        streamer.publish(message);  // el streamer publica el mensaje
-
-        // el broker distribuye el mensaje a todos los seguidores
-        broker.sendMessage(message);  // el broker envía el mensaje a los seguidores
-
-        // cerrar el scanner
-        scanner.close();
+    public static void main (String args[]) {
+        if (args.length != 1) {
+            System.out.println("Usage: java T1Stage2 <configurationFile.txt>");
+            System.exit(-1);
+        }
+        Scanner in = null;
+        try {
+            in = new Scanner(new File(args[0]));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("File: " + args[0]);
+            System.exit(-1);
+        }
+        main stage = new main();
+        stage.setupSimulator(in);
+        stage.runSimulation();
     }
+
+    public void setupSimulator(Scanner in) {  // create main objects from configuration file
+        broker broker = new broker();
+        String component;
+        String componentName;
+        String topicName;
+        String fileName=null;
+        component = in.next();
+        componentName = in.next();
+        topicName = in.next();
+        if(component.equals("publicador")) // it must be a publisher for a well structured config file
+            gps = new publisher(componentName, broker, topicName);
+        component = in.next();
+        String componentType = in.next();
+        componentName = in.next();
+        topicName = in.next();
+        try {
+            if (component.equals("suscriptor")) { // it must be a subscriber in stage 2
+                fileName = in.next();
+                if (componentType.equals("Registrador")) { // it must be a monitor in stage 2
+                    recorder recorder =new recorder(componentName,topicName,new PrintStream(fileName));
+                    broker.subscribe(recorder);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("File: " + fileName);
+            System.exit(-1);
+        }
+    }
+    public void runSimulation() {
+        Scanner inputEvent = new Scanner(System.in);
+        System.out.println("Escribe un mensaje: ");
+        while (inputEvent.hasNextLine()) {
+            String message = inputEvent.nextLine();
+            gps.publishNewEvent(message);
+        }
+    }
+    private publisher gps;
 }

@@ -1,30 +1,21 @@
 public class publisher {
-    private String name; //nombre del streamer
-    private String topic; //topico donde se publica
+    private String name;
+    private broker broker;
+    private String topic;
 
+    public publisher(String name, broker broker, String topic) {
+        this.name = name;
+        this.broker = broker;
+        this.topic = topic;
+    }
 
-//inicializar el nombre y topico
-public publisher(String name, String topic){
-    this.name = name;
-    this.topic = topic;
+    public void publishNewEvent(String message) {
+        broker.publish(topic, message.trim());
+    }
+
+    public String getName() {
+        return name;
+    }
 }
-
-//getter para acceder al nombre y topico
-public String getName(){
-    return name;
-}
-
-public String getTopic() {
-    return topic;
-}
-
-//metodo para publicar un mensaje en el topico
-public void publish(String message){
-    //simulacion publicacion de un mensaje en el topico
-    System.out.println("publicador"+name+""+topic);
-    System.out.println(message); //imprime el msg publicado
-}
-}
-
 
 
