@@ -1,31 +1,98 @@
+import java.io.File;
+import java.io.PrintStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.management.monitor.Monitor;
+
+
+
+//el Main es el Simulador ("En esta etapa llame Simulador su programa ejecutable")
 public class main {
-    public static void main(String[] args) {
-        // crear una instancia de un publicador (streamer)
-        publisher streamer = new publisher("Streamer_1", "Notificaciones_1");
-        
-        // crear una instancia de los suscriptores (seguidores)
-        follower follower1 = new follower("Seguidor_1", "Notificaciones_1");
-        follower follower2 = new follower("Seguidor_2", "Notificaciones_1");
+    private broker broker;
+    private ArrayList<publisher> publishers = new ArrayList<>();
 
-        // crear un Broker para gestionar los suscriptores
+    public static void main (String args[]) {
+        if (args.length != 1) {
+            System.out.println("Usage: java T1Stage2 <configurationFile.txt>");
+            System.exit(-1);
+        }
+
+        Scanner in = null;
+        try {
+            in = new Scanner(new File(args[0]));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("File: " + args[0]);
+            System.exit(-1);
+        }
+
+        main stage = new main();
+        stage.setupSimulator(in);
+        stage.runSimulation();
+    }
+
+    public void setupSimulator(Scanner in) {  // create main objects from configuration file
         broker broker = new broker();
-        broker.addSubscriber(follower1);  // agregar seguidor 1
-        broker.addSubscriber(follower2);  // agregar seguidor 2
 
-        // crear un Scanner para leer mensajes del teclado
-        Scanner scanner = new Scanner(System.in);
+        while (in.hasNext()) {
+            String component = in.next();
+            if (component.equals("publicador")) {
+                String componentName = in.next();
+                String topicName = in.next();
+                publisher pub = new publisher(componentName, broker, topicName);
+                publishers.add(pub);
+            } else if (component.equals("suscriptor")) {
+                String type = in.next();
+                String componentName = in.next();
+                String topicName = in.next();
+                String fileName = in.next();
+                try {
+                    if (type.equals("Seguidor")) {
+                        follower f = new follower(componentName, topicName, new PrintStream(fileName));
+                        broker.subscribe(f);
+                    } else if (type.equals("Monitor")){
+                        monitor m = new monitor(componentName, topicName, new PrintStream(fileName)); 
+                        broker.subscribe(m);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.out.println("File: " + fileName);
+                    System.exit(-1);
+                }
+            }
+        }
+    }
+    public void runSimulation() {
+        System.out.println("Ingresa el nombre del publicador seguido del mensaje o coordenadas:");
+        Scanner inputEvent = new Scanner(System.in);
+        while (inputEvent.hasNextLine()) {
+            String line = inputEvent.nextLine().trim();
+            if (line.isEmpty()) break;
 
-        // el streamer (publicador) publica un mensaje
-        System.out.println("Escribe un mensaje para que el streamer lo publique:");
-        String message = scanner.nextLine();  // leemos el mensaje ingresado por el usuario
-        streamer.publish(message);  // el streamer publica el mensaje
+            int firstSpace = line.indexOf(' ');
+            if (firstSpace == -1) {
+                System.out.println("Formato inválido. Debe ser: <publicador> <mensaje>");
+                continue;
+            }
 
-        // el broker distribuye el mensaje a todos los seguidores
-        broker.sendMessage(message);  // el broker envía el mensaje a los seguidores
+            String publisherName = line.substring(0, firstSpace);
+            String message = line.substring(firstSpace + 1);
 
-        // cerrar el scanner
-        scanner.close();
+            publisher found = null;
+            for (publisher pub : publishers) {
+                if (pub.getName().equals(publisherName)) {
+                    found = pub;
+                    break;
+                }
+            }
+
+            if (found != null) {
+                found.publishNewEvent(message);
+            } else {
+                System.out.println("Unknown Publisher");
+            }
+        }
     }
 }

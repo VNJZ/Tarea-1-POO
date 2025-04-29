@@ -1,17 +1,18 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class broker {
-    private ArrayList<subscriber> subscribers = new ArrayList<>();  // lista de suscriptores
+    private List<subscriber> subscribers = new ArrayList<>();
 
-    // metodo para agregar un suscriptor a la lista
-    public void addSubscriber(subscriber subscriber) {
-        subscribers.add(subscriber);
+    public void subscribe(subscriber sub) {
+        subscribers.add(sub);
     }
 
-    // metodo para enviar un mensaje a todos los suscriptores
-    public void sendMessage(String message) {
+    public void publish(String topic, String message) {
         for (subscriber sub : subscribers) {
-            sub.receiveMessage(message);  // llamamos al método de recibir mensaje de cada suscriptor
+            if (sub.getTopic().equals(topic)) {
+                sub.receiveMessage(message);
+            }
         }
     }
 }

@@ -1,13 +1,21 @@
-public abstract class subscriber {
-    protected String name;  //nombre del suscriptor
-    protected String topic; //topico al que esta suscrito
+public class subscriber {
+    protected String name;
+    protected String topic;
 
-    //constructor para inicializar el nombre y el topico del suscriptor
-    public subscriber(String name, String topic){
+    public subscriber(String name, String topic) {
         this.name = name;
         this.topic = topic;
     }
 
-    //metodo que sera sobreescrito en las subclases para recibir el mensaje
-    public abstract void receiveMessage(String message);
+    public String getTopic() {
+        return topic;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void receiveMessage(String message) {
+        // Método que se sobrescribirá
+    }
 }
