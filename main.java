@@ -4,6 +4,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.management.monitor.Monitor;
+
+
+
+//el Main es el Simulador ("En esta etapa llame Simulador su programa ejecutable")
 public class main {
     private broker broker;
     private ArrayList<publisher> publishers = new ArrayList<>();
@@ -47,6 +52,9 @@ public class main {
                     if (type.equals("Seguidor")) {
                         follower f = new follower(componentName, topicName, new PrintStream(fileName));
                         broker.subscribe(f);
+                    } else if (type.equals("Monitor")){
+                        monitor m = new monitor(componentName, topicName, new PrintStream(fileName)); 
+                        broker.subscribe(m);
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -61,7 +69,7 @@ public class main {
         Scanner inputEvent = new Scanner(System.in);
         while (inputEvent.hasNextLine()) {
             String line = inputEvent.nextLine().trim();
-            if (line.isEmpty()) continue;
+            if (line.isEmpty()) break;
 
             int firstSpace = line.indexOf(' ');
             if (firstSpace == -1) {
