@@ -65,7 +65,7 @@ public class main {
         }
     }
     public void runSimulation() {
-        System.out.println("Ingresa el nombre del streamer y la notificación de stream");
+        System.out.println("Ingresa el nombre del publicador seguido del mensaje o coordenadas:");
         Scanner inputEvent = new Scanner(System.in);
         while (inputEvent.hasNextLine()) {
             String line = inputEvent.nextLine().trim();
